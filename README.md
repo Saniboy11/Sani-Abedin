@@ -27,3 +27,7 @@ Then visit <http://localhost:8000>.
 
 - This demo uses heuristic food inference from image/file names and optional food text.
 - To improve estimate quality, include recognizable keywords in meal names (e.g. "pizza", "salad", "chicken").
+
+## Vercel deployment fix
+
+If you deploy on Vercel and see `404: NOT_FOUND`, make sure the project root is this folder and keep the included `vercel.json` rewrite so all routes resolve to `index.html` for SPA behavior.

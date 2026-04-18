@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SnapCal AI - Smart Calorie Tracker</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+
+    <main class="app-shell">
+      <header class="hero card glass reveal">
+        <div>
+          <p class="eyebrow">AI calorie tracker</p>
+          <h1>SnapCal AI</h1>
+          <p>
+            Click a food photo, auto-estimate calories, keep a daily log, and get adaptive AI suggestions from your habits.
+          </p>
+        </div>
+        <div class="hero-stats">
+          <div class="pill" id="streakPill">🔥 0 day streak</div>
+          <div class="pill" id="statusPill">🎯 On track</div>
+        </div>
+      </header>
+
+      <section class="grid reveal" style="--delay: 0.08s">
+        <article class="card glass">
+          <div class="card-title-row">
+            <h2>Profile & Goals</h2>
+            <span class="badge">Personalized</span>
+          </div>
+          <form id="profileForm" class="stack">
+            <div class="field-row">
+              <label>
+                Name
+                <input type="text" id="name" placeholder="e.g. Alex" required />
+              </label>
+              <label>
+                Age
+                <input type="number" id="age" min="10" max="100" required />
+              </label>
+            </div>
+            <div class="field-row">
+              <label>
+                Height (cm)
+                <input type="number" id="height" min="100" max="230" required />
+              </label>
+              <label>
+                Weight (kg)
+                <input type="number" id="weight" min="30" max="250" required />
+              </label>
+            </div>
+            <div class="field-row">
+              <label>
+                Daily calorie target
+                <input type="number" id="targetCalories" min="900" max="6000" value="2100" required />
+              </label>
+              <label>
+                Protein target (g)
+                <input type="number" id="targetProtein" min="20" max="300" value="120" required />
+              </label>
+            </div>
+            <label>
+              Goal focus
+              <select id="goalFocus">
+                <option value="fat-loss">Fat loss</option>
+                <option value="maintenance">Maintenance</option>
+                <option value="muscle-gain">Muscle gain</option>
+                <option value="performance">Athletic performance</option>
+              </select>
+            </label>
+            <button type="submit" class="btn">Save profile</button>
+          </form>
+        </article>
+
+        <article class="card glass">
+          <div class="card-title-row">
+            <h2>Snap Food</h2>
+            <span class="badge">Camera-first</span>
+          </div>
+          <form id="foodForm" class="stack">
+            <label>
+              Food name (optional)
+              <input type="text" id="foodName" placeholder="e.g. Chicken salad" />
+            </label>
+            <label class="file-field">
+              Upload / click a food photo
+              <input type="file" id="foodImage" accept="image/*" required />
+            </label>
+            <div class="field-row">
+              <label>
+                Meal type
+                <select id="mealType">
+                  <option>Breakfast</option>
+                  <option>Lunch</option>
+                  <option>Dinner</option>
+                  <option>Snack</option>
+                </select>
+              </label>
+              <label>
+                Portion size
+                <select id="portionSize">
+                  <option value="0.8">Small</option>
+                  <option value="1" selected>Medium</option>
+                  <option value="1.25">Large</option>
+                </select>
+              </label>
+            </div>
+            <button type="submit" class="btn">Analyze & Add meal</button>
+          </form>
+          <div id="preview" class="preview hidden"></div>
+        </article>
+      </section>
+
+      <section class="grid reveal" style="--delay: 0.16s">
+        <article class="card glass">
+          <div class="card-title-row">
+            <h2>Today dashboard</h2>
+            <span class="badge">Live progress</span>
+          </div>
+          <div class="metrics">
+            <div class="metric">
+              <p>Calories consumed</p>
+              <h3 id="caloriesConsumed">0</h3>
+            </div>
+            <div class="metric">
+              <p>Calories remaining</p>
+              <h3 id="caloriesRemaining">0</h3>
+            </div>
+            <div class="metric">
+              <p>Protein consumed</p>
+              <h3 id="proteinConsumed">0g</h3>
+            </div>
+          </div>
+          <div class="progress-wrap">
+            <div class="progress-label-row">
+              <span>Calorie target progress</span>
+              <strong id="progressPercent">0%</strong>
+            </div>
+            <div class="progress">
+              <span id="progressFill"></span>
+            </div>
+          </div>
+        </article>
+
+        <article class="card glass">
+          <div class="card-title-row">
+            <h2>AI Coach Suggestions</h2>
+            <span class="badge">Adaptive</span>
+          </div>
+          <ul id="suggestions" class="suggestions"></ul>
+        </article>
+      </section>
+
+      <section class="card glass reveal" style="--delay: 0.24s">
+        <div class="card-title-row">
+          <h2>Meal log</h2>
+          <button id="clearLog" class="btn btn-ghost" type="button">Clear all</button>
+        </div>
+        <div id="mealLog" class="meal-log"></div>
+      </section>
+    </main>
+
+    <template id="mealTemplate">
+      <article class="meal-item">
+        <img alt="Logged meal" />
+        <div class="meal-content">
+          <div class="meal-top-row">
+            <h4></h4>
+            <span class="meal-calories"></span>
+          </div>
+          <p class="meal-meta"></p>
+          <p class="meal-note"></p>
+        </div>
+      </article>
+    </template>
+
+    <script src="app.js"></script>
+  </body>
+</html>
